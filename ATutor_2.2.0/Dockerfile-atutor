@@ -1,0 +1,30 @@
+FROM danidemi/atutor
+
+LABEL "maintainer"="strff0x <strf0x@protonmail.com>" \
+      "version.php"="5.6.30" \
+      "version.Atutor"="2.2.1"
+
+EXPOSE 80
+
+RUN wget -O /tmp/atutor.zip --quiet https://github.com/atutor/ATutor/archive/atutor_2_2_1.zip; \
+    unzip /tmp/atutor.zip -d /tmp; \
+    rm -rf /var/www/html; \
+    mv /tmp/ATutor-atutor_2_2_1 /var/www/html/; \
+    touch /var/www/html/include/config.inc.php; \
+    chmod a+rw -R /var/www/html/; \
+    echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php; \
+    rm /tmp/atutor.zip
+
+RUN rm /etc/apt/sources.list
+
+RUN echo "deb http://archive.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list.d/jessie.list
+
+RUN echo "deb http://archive.debian.org/debian jessie main" >> /etc/apt/sources.list.d/jessie.list
+
+RUN apt update && apt install php5-xdebug -y --force-yes
+
+RUN sed -i "/display_errors = Off/c\display_errors = On" /usr/local/etc/php/conf.d/docker-php.ini;
+RUN echo "[xdebug]" >> /usr/local/etc/php/conf.d/docker-php.ini
+RUN echo "xdebug.client_host=0.0.0.0" >> /usr/local/etc/php/conf.d/docker-php.ini
+RUN echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php.ini
+RUN echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php.ini

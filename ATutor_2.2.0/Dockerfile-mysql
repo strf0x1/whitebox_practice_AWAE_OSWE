@@ -1,0 +1,10 @@
+FROM mysql:5.6
+
+LABEL "maintainer"="strf0x <strf0x@protonmail.com>" \
+      "version.mysql"="5.6"
+
+EXPOSE 3306
+
+RUN echo "[mysqld]" >> /etc/mysql/my.cnf
+RUN echo "general_log_file = /var/log/mysql/mysql.log" >> /etc/mysql/my.cnf
+RUN echo "general_log = 1" >> /etc/mysql/my.cnf

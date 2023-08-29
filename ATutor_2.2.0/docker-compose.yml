@@ -2,17 +2,24 @@ version: "3"
 
 services:
   db:
-    image: mysql:5.6    
-    
+    image: mysql:5.6
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
     environment:
       MYSQL_ROOT_PASSWORD: password123 
     ports:
       - "3306:3306"
 
   atutor:
-    image: "lnwza555/atutor"
-      
+    image: "strf0x/atutor"
+    build:
+      context: .
+      dockerfile: Dockerfile-atutor 
     depends_on:
       - db
     ports:
       - "80:80"
+      - "9003:9003"
+    volumes:
+      - ./src:/var/www/html
